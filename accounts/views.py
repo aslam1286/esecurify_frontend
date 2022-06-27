@@ -10,7 +10,8 @@ def register(request):
     return render(request, "register.html")
 
 def forgot_password(request):
-    pass
+    return render(request, "forgot_password.html")
+    
 
 def reset_password(request):
     pass
