@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
-def index(requset):
-    pass
+def index(request):
+    return render(request, "dashboard.html")
 
 def login(request):
     return render(request, "login.html")
