@@ -15,3 +15,6 @@ def forgot_password(request):
 
 def reset_password(request):
     pass
+
+def settings(request):
+    return render(request,'settings.html')

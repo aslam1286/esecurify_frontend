@@ -5090,7 +5090,7 @@
 												<!--end::Menu item-->
 												<!--begin::Menu item-->
 												<div class="menu-item px-5 my-1">
-													<a href="../../demo1/dist/account/settings.html" class="menu-link px-5">Account Settings</a>
+													<a href="{% url 'accounts:settings' %}" class="menu-link px-5">Account Settings</a>
 												</div>
 												<!--end::Menu item-->
 												<!--begin::Menu item-->
@@ -5153,13 +5153,25 @@
 								<!--begin::Page title-->
 								<div data-kt-swapper="true" data-kt-swapper-mode="prepend" data-kt-swapper-parent="{default: '#kt_content_container', 'lg': '#kt_toolbar_container'}" class="page-title d-flex align-items-center flex-wrap me-3 mb-5 mb-lg-0">
 									<!--begin::Title-->
-									<h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">Dashboard
+									<h1 class="d-flex align-items-center text-dark fw-bolder fs-3 my-1">{% block breadcrumb %}{% endblock %}
 									<!--begin::Separator-->
-									<span class="h-20px border-gray-200 border-start ms-3 mx-2"></span>
-									<!--end::Separator-->
-									<!--begin::Description-->
-									<small class="text-muted fs-7 fw-bold my-1 ms-1">#XRS-45670</small>
+									<span class="h-20px border-gray-200 border-start mx-4"></span>
 									<!--end::Description--></h1>
+									<ul class="breadcrumb breadcrumb-separatorless fw-bold fs-7 my-1">
+										<!--begin::Item-->
+										<li class="breadcrumb-item text-muted">
+											<a href="../../demo1/dist/index.html" class="text-muted text-hover-primary">Home</a>
+										</li>
+										<!--end::Item-->
+										<!--begin::Item-->
+										<li class="breadcrumb-item">
+											<span class="bullet bg-gray-200 w-5px h-2px"></span>
+										</li>
+										<!--end::Item-->
+										<!--begin::Item-->
+										<li class="breadcrumb-item text-muted">{% block breadcrumb_li %}{% endblock %}</li>
+										<!--end::Item-->
+									</ul>
 									<!--end::Title-->
 								</div>
 								<!--end::Page title-->
@@ -5270,18 +5282,11 @@
 						<!--begin::Post-->
 						<div class="post d-flex flex-column-fluid" id="kt_post">
 							<!--begin::Container-->
-							<div id="kt_content_container" class="container">
-								<!--begin::Row-->
-								<!--end::Row-->
-								<!--begin::Row-->
-								<!--end::Row-->
-								<!--begin::Row-->
-								<!--end::Row-->
-								<!--begin::Row-->
-								<!--end::Row-->
-								<!--begin::Row-->
-								<!--end::Row-->
+							<div class="container">
+							{% block content %}
+							{% endblock %}
 							</div>
+							
 							<!--end::Container-->
 						</div>
 						<!--end::Post-->
@@ -7788,5 +7793,6 @@
 		<script src="{% static 'js/custom/apps/chat/chat.js' %}"></script>
 		<script src="{% static 'js/custom/modals/create-app.js' %}"></script>
 		<script src="{% static 'js/custom/modals/upgrade-plan.js' %}"></script>
+		{% block javascript %}{% endblock %}
 	</body>
 </html>
