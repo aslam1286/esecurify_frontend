@@ -18,7 +18,8 @@
 						<img alt="Logo" src="{% static 'media/logos/logo.png' %}" class="h-45px" />
 					</a>
 					<div class="w-lg-500px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
-						<form class="form w-100" novalidate="novalidate" id="kt_sign_up_form">
+						<form class="form w-100" novalidate="novalidate" id="sign_up_form">
+							{% csrf_token %}
 							<div class="mb-10 text-center">
 								<h1 class="text-dark mb-3">Create an Account</h1>
 								<div class="text-gray-400 fw-bold fs-4">Already have an account?
@@ -77,7 +78,7 @@
 								</label>
 							</div>
 							<div class="text-center">
-								<button type="button" id="kt_sign_up_submit" class="btn btn-lg btn-primary w-100 mb-5">
+								<button type="button" id="sign_up_submit" class="btn btn-lg btn-primary w-100 mb-5">
 									<span class="indicator-label">Submit</span>
 									<span class="indicator-progress">Please wait...
 									<span class="spinner-border spinner-border-sm align-middle ms-2"></span></span>
@@ -100,9 +101,138 @@
 				</div>
 			</div>
 		</div>
+		
         <script src="{% static 'plugins/global/plugins.bundle.js' %}" src="assets/"></script>
 		<script src="{% static 'js/scripts.bundle.js' %}"></script>
-		<script src="{% static 'js/custom/authentication/sign-up/general.js' %}"></script>
+		<!-- <script src="{% static 'js/custom/authentication/sign-up/general.js' %}"></script> -->
 
 	</body>
 </html>
+
+<script>
+    "use strict";
+    function handleSubmitForm(){
+        const form = document.querySelector("#sign_up_form");
+        const submitButton = document.querySelector("#sign_up_submit");
+        const passwordMeter = KTPasswordMeter.getInstance(form.querySelector('[data-kt-password-meter="true"]'));
+        let validator = FormValidation.formValidation(form,{
+            fields :{
+                "first-name": {
+                    validators: {
+                        notEmpty: {
+                            message: "First Name is required"
+                        }
+                    },
+                },
+                "last-name": {
+                    validators: {
+                        notEmpty: {
+                            message: "Last Name is required"
+                        }
+                    },
+                },
+                email: {
+                    validators: {
+                        notEmpty: {
+                            message: "Email address is required"
+                        },
+                        emailAddress: {
+                            message: "The value is not a valid email address",
+                        },
+                    },
+                },
+                password: {
+                    validators: {
+                        notEmpty: {
+                            message: "The password is required"
+                        },
+                        callback: {
+                            message: "Please enter valid password",
+                            callback: function (e) {
+                                if (e.value.length > 0) return r();
+                            },
+                        },
+                    },
+                },
+                "confirm-password": {
+                    validators: {
+                        notEmpty: {
+                            message: "The password confirmation is required"
+                        },
+                        identical: {
+                            compare: function () {
+                                return form.querySelector('[name="password"]').value;
+                            },
+                            message: "The password and its confirm are not the same",
+                        },
+                    },
+                },
+                toc: {
+                    validators: {
+                        notEmpty: {
+                            message: "You must accept the terms and conditions",
+                        },
+                    },
+                },
+            },
+            plugins:{
+                trigger: new FormValidation.plugins.Trigger({
+                    event: { password: !1 },
+                }),
+                bootstrap: new FormValidation.plugins.Bootstrap5({
+                    rowSelector: ".fv-row",
+                    eleInvalidClass: "",
+                    eleValidClass: "",
+                }),
+            }
+        });
+        submitButton.addEventListener("click", function(r){
+            r.preventDefault(),
+            validator.revalidateField("password"),
+            validator.validate().then(function(val){
+                "Valid" == val ? (submitButton.setAttribute("data-kt-indicator", "on"),
+                (submitButton.disabled = !0),
+                setTimeout(function(){
+                    submitButton.removeAttribute("data-kt-indicator"),
+                    (submitButton.disabled = !1),
+                    $.ajax({
+                        type: "POST",
+                        url: "{% url 'accounts:register_user' %}",
+                        data: $(form).serialize(),
+                        dataType: "json",
+                        success: function(response){
+                            Swal.fire({
+                                text: "You have successfully reset your password!",
+                                icon: "success",
+                                buttonsStyling: !1,
+                                confirmButtonText: "Ok, got it!",
+                                customClass: {
+                                    confirmButton: "btn btn-primary"
+                                },
+                            }).then(function(t){
+                                t.isConfirmed && (form.reset());
+                            });
+                        },
+                        error: function (jqXHR, textStatus, errorThrown) {
+                            alert("Error! Retry, or contact support.");
+                        },
+                    })
+                }, 1500))
+                : Swal.fire({
+                    text: "Sorry, looks like there are some errors detected, please try again.",
+                    icon: "error",
+                    buttonsStyling: !1,
+                    confirmButtonText: "Ok, got it!",
+                    customClass: { confirmButton: "btn btn-primary" },
+                });
+            })
+        }),
+        form.querySelector('input[name="password"]').addEventListener("input", function(){
+            this.value.length > 0 && validator.updateFieldStatus("password", "NotValidated");
+        });
+    }
+
+    KTUtil.onDOMContentLoaded(function () {
+        handleSubmitForm();
+    });
+</script>
