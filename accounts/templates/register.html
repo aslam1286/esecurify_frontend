@@ -202,7 +202,7 @@
                         dataType: "json",
                         success: function(response){
                             Swal.fire({
-                                text: "You have successfully reset your password!",
+                                text: "Thanks for register..!",
                                 icon: "success",
                                 buttonsStyling: !1,
                                 confirmButtonText: "Ok, got it!",
@@ -211,6 +211,7 @@
                                 },
                             }).then(function(t){
                                 t.isConfirmed && (form.reset());
+								window.location = "{% url 'accounts:login_user' %}";
                             });
                         },
                         error: function (jqXHR, textStatus, errorThrown) {
