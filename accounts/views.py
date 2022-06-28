@@ -18,9 +18,9 @@ def register(request):
     if request.method == 'POST':
         user_data = request.POST
         first_name = user_data['first-name']
-        last_name = user_data['first-name']
+        last_name = user_data['last-name']
         email = user_data['email']
-        password = user_data['email']
+        password = user_data['password']
         confirm_password = user_data['confirm-password']
         if password == confirm_password:
             user = User.objects.create_user(
