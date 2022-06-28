@@ -1,11 +1,19 @@
 {% extends 'base.html' %}
-{% block breadcrumb %}Dashboard{% endblock %}
+{% block content_title %}Dashboard{% endblock %}
+{% block breadcrumbs %}
+    <span class="h-20px border-gray-200 border-start mx-4"></span>
+    <ul class="breadcrumb breadcrumb-separatorless fw-bold fs-7 my-1">
+        <li class="breadcrumb-item text-muted">
+            Dashboard
+        </li>
+    </ul>
+{% endblock %}
 {% block content %}
 <div class="card mb-5 mb-xl-10">
     <div class="card-body pt-9 pb-0">
         <div class="d-flex flex-wrap flex-sm-nowrap mb-3">
             <div class="me-7 mb-4">
-                <h1>Dashboard</h1>
+                <h1>Welcomr to Dashboard</h1>
 
             </div>
         </div>
