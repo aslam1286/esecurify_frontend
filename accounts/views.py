@@ -1,18 +1,44 @@
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout, update_session_auth_hash
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from accounts.models import UserProfile
+from django.urls import reverse
 
 
 def index(request):
     return render(request, "dashboard.html")
 
 def login(request):
+    if request.method == 'POST':
+        user_data = request.POST
+        email = user_data['email']
+        password = user_data['password']
+        user = authenticate(request, username=email, password=password)
+        
+        if not user or user.userprofile.is_deleted:
+            print("Hello")
+            
+            return render(request, 'login.html', {'error': 'Invalid username or password!'})
+        auth_login(request, user)
+        
+        return JsonResponse({
+            "retcode": 1
+        })
+        
+    else:
+        user = request.user
+        if not user.is_authenticated:
+            return render(request, 'login.html')
+    return HttpResponseRedirect(reverse('accounts:dashboard'))
+
+
     
     return render(request, "login.html")
 
 def logout(request):
-    return render(request, "login.html")
+    auth_logout(request)
+    return HttpResponseRedirect(reverse('accounts:login_user'))
 
 def register(request):
     if request.method == 'POST':

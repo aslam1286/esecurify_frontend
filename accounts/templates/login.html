@@ -20,6 +20,7 @@
 
 					<div class="w-lg-500px bg-body rounded shadow-sm p-10 p-lg-15 mx-auto">
 						<form class="form w-100" novalidate="novalidate" id="sign_in_form" action="#">
+							{% csrf_token %}
 
 							<div class="text-center mb-10">
 								<h1 class="text-dark mb-3">Sign In to eSecurify</h1>
@@ -129,10 +130,10 @@
 						type: "POST",
                         url: "{% url 'accounts:login_user' %}",
                         data: $(form).serialize(),
-                        dataType: "json",
 						success: function(response){
-							
-
+							if (response['retcode']=== 1){
+								window.location = "{% url 'accounts:dashboard' %}";
+							}
 						},
 						error: function (jqXHR, textStatus, errorThrown) {
                             alert("Error! Retry, or contact support.");
